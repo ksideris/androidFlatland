@@ -1,0 +1,3 @@
+#bin/bash
+cd `dirname $0`
+scp -r ./ root@"$1":/home/user/flatland-arg

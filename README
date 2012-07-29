@@ -1,0 +1,35 @@
+Latest iteration of flatland
+---------------------------
+Flatland ARG!!! is an Augmented Reality Real Time Strategy (ARRTS) game based on Edward Abbot's 1884 Sci-Fi novel Flatland. 
+The gameplay is similar to aspects of flashlight tag, capture the flag, Starcraft and Stratego. The game is played on a standard sized 
+soccer or football field. Each of the two teams has 3-6 players dressed in team costumes. The game has a fixed time limit and the winning team 
+is the one with the most total polygon sides at the end of play. Each player uses a cast scepter equipped with a Nokia Tablet and custom electronics. 
+Actions in the real world are represented in the virtual space. Teams can focus on gaining sides and on diminishing the opposing team's sides using a 
+range of game actions including revealing invisible structures and players, building structures, gathering and transporting resources, destroying structures, 
+and attacking players. Some advanced actions require synchronized group "rituals" involving player positions and gesture patterns using the game scepter.
+
+
+Read more about the game here:
+http://games.ucla.edu/games/flatland/
+
+In this latest rewrite, the game logic has been completely decoupled from the networking stack.
+
+Networking is achieved through http requests (subject to performance evaluation) to achieve greater portability between platforms
+It has been tested under Windows, Linux and Mac and it written entirely in python
+
+
+
+you can run the game as following:
+
+python gameserver.py //initializes the server game logic
+python networkserver.py //initializes the network server
+python gameclient 'player_id' 'team_id' to run a client
+
+
+Todo : 
+
+1. REMOVE BUILDINGS COMPLETELY AFTER DESCTRUCTION
+2. Make server settings more easily configurable
+3.fix issues with scanning
+
+	

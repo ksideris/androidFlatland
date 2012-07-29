@@ -1,0 +1,4 @@
+#bin/bash
+cd `dirname $0`
+scp -r ./game/*.py root@"$1":/home/user/flatland-arg/game
+scp -r ./game/network/*.py root@"$1":/home/user/flatland-arg/game/network
