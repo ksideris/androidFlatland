@@ -126,7 +126,7 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
     def deSerialize(self,state):
         #state=None
         #localdb = shelve.open(CLIENTLOCALDATA.split('.')[0]+str(self.playerID)+'.'+CLIENTLOCALDATA.split('.')[1])
-        if True:#localdb.has_key('data'):
+        try:#:#localdb.has_key('data'):
                 
             '''try:
 
@@ -137,9 +137,13 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
             '''       
             if(state<>None):
                 t = state.split('$')
+                print t[0]
+                print t[1]
+                print t[2]
                 players =  pickle.loads(t[0]) #update players
                 #self.players.clear()
                 
+		print 'step 1'
                 for p in players.itervalues():
                     found =False
                     pkey = 0
@@ -162,16 +166,24 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
                             self.players[pkey].action = p.action
                     else:
                         self.players[id(p)]=p
-
                 buildings =  pickle.loads(t[1]) #update buildings
+		print 'step 2'
                 self.buildings.clear()
                 for b in buildings.itervalues():                    
                     self.buildings[id(b)] = b
-
+		print t[2]
+				
                 self.ResourcePool = pickle.loads(t[2])
+		print 'step 3'
+		print t[3]
                 self.scores =pickle.loads(t[3])
+		print 'step 4'
                 self.TimeLeft =int(t[4])
+		print 'step 5'
                 
                
                 self.GameOver = not bool(t[6]) #weird
               
+		print 'step 6'
+        except:
+            print "Unexpected error:", sys.exc_info()[0]
