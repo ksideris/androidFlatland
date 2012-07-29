@@ -28,8 +28,8 @@ class GameStateTransmitter(RequestHandler):
     
     
     def get(self):
-        
         args= self.request.arguments
+        print args
         serv_db = shelve.open(SERVERDATA)
 
         try:

@@ -17,15 +17,16 @@ __copyright__   = "Copyright 2012, UCLA game lab"
 import pygame
 from vector import Vector2D
 from game.player import Player,Building,ResourcePool
-from game.network.SimpleClient import SimpleClient
-#from game.network.asyncClient import AsyncClient
+#from game.network.SimpleClient import SimpleClient
+from game.network.asyncClient import AsyncClient
 from libs.LoopingCall import LoopingThread
 
 
 import time,random
 import pickle,sys #TODO change to cPickle for speed
 
-import libs.shelve as shelve,os
+#import libs.shelve as shelve,
+import os
 CLIENTLOCALDATA = 'ClientLocalData.db'
 
 class Environment(LoopingThread): #in an MVC system , this would be a controller
@@ -58,7 +59,7 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
 		self.scores =[0,0]
 		self.IsServer = False
 		self.ResourcePool = None
-		self.client = SimpleClient()
+		self.client = AsyncClient(self)
 		self.serverIP =serverIP
 		self.serverPort = serverPort
                 self.Tick = 0
@@ -76,7 +77,7 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
             
     def task(self):
                 
-		self.deSerialize()
+		#self.deSerialize()
 		self.updateTime()
 		self.updatePositions()
 		self.readGestures()
@@ -122,18 +123,18 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
 
 	#FUNCTIONS FOR NETWORKING
 	
-    def deSerialize(self):
-        state=None
-        localdb = shelve.open(CLIENTLOCALDATA.split('.')[0]+str(self.playerID)+'.'+CLIENTLOCALDATA.split('.')[1])
-        if localdb.has_key('data'):
+    def deSerialize(self,state):
+        #state=None
+        #localdb = shelve.open(CLIENTLOCALDATA.split('.')[0]+str(self.playerID)+'.'+CLIENTLOCALDATA.split('.')[1])
+        if True:#localdb.has_key('data'):
                 
-            try:
+            '''try:
 
                 state = localdb['data']['string']             
 
             finally:
                 localdb.close()
-                    
+            '''       
             if(state<>None):
                 t = state.split('$')
                 players =  pickle.loads(t[0]) #update players

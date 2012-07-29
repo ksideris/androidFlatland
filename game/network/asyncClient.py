@@ -9,15 +9,18 @@ __copyright__   = "Copyright 2012, UCLA game lab"
 
 
 
-import asyncore, socket,pickle,time,string
-import libs.shelve as shelve
+import libs.asyncore as asyncore, socket,pickle,time,string
+from  game.clientEnvironment import *
+#import libs.shelve as shelve
 SHOW_STATISTICS =False
 ID = 0
 CLIENTLOCALDATA = 'ClientLocalData.db'
 message =''
+
 class HTTPClient(asyncore.dispatcher):
 
-    def __init__(self, host,port, path):
+    def __init__(self,client, host,port, path):
+        self.myclient = client
         asyncore.dispatcher.__init__(self)
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.connect( (host, int(port)) )
@@ -38,11 +41,13 @@ class HTTPClient(asyncore.dispatcher):
             else:
                 if(len(message)>0):
                 
-                    localdb = shelve.open(CLIENTLOCALDATA.split('.')[0]+str(ID)+'.'+CLIENTLOCALDATA.split('.')[1])
+                    '''localdb = shelve.open(CLIENTLOCALDATA.split('.')[0]+str(ID)+'.'+CLIENTLOCALDATA.split('.')[1])
                     try:
                         localdb['data']={'time':time.time(),'string':message}
                     finally:
                         localdb.close()
+                    '''
+                    self.myclient.deSerialize(message)
                     message=''    
                 bodyIndex =  string.index(s, "\r\n\r\n") +4
                 message += s[bodyIndex:]        
@@ -57,7 +62,9 @@ class HTTPClient(asyncore.dispatcher):
 
 
 class AsyncClient():
-
+    def __init__(self,client):
+        self.client = client
+        
     def MakeRequest(self,pid,team,action,position):
         global ID
         ID  = pid
@@ -68,7 +75,7 @@ class AsyncClient():
                 message+='&pos='+str(position[0])+','+str(position[1])
         message+='&time='+str(time.time())
         #print message
-        client = HTTPClient(self.server_address,self.server_port, message)
+        client = HTTPClient(self.client,self.server_address,self.server_port, message)
         asyncore.loop()
     
         

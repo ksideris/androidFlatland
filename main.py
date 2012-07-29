@@ -46,7 +46,7 @@ else:
 '''
 #print 'Usage: gameclient.py player_id team'
 print 'Step 2'
-tenv = environment.Environment(0,1,'127.0.0.1','80')
+tenv = environment.Environment(0,1,'192.168.1.5','80')
 print 'Step 3'
 a=view.Window(tenv)
         
