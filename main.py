@@ -32,7 +32,7 @@ else:
 
 #print 'Usage: gameclient.py player_id team'
 
-tenv = environment.Environment(0,1,'127.0.0.1','80')
+tenv = environment.Environment(1,2,'192.168.1.5','80')
 
 a=view.Window(tenv)
         
