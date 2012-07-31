@@ -35,7 +35,7 @@ class HTTPClient(asyncore.dispatcher):
     def handle_read(self):
 	global ID,message
 	s= self.recv(100000)
-	print s
+	
 	if(len(s)>0):
             if(s[:4]<>'HTTP'):
                 message+=s
@@ -48,7 +48,7 @@ class HTTPClient(asyncore.dispatcher):
                     finally:
                         localdb.close()
                     '''
-                    print message
+                    
                     self.myclient.deSerialize(message)
                     
                     message=''    

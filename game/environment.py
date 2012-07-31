@@ -66,8 +66,7 @@ class Environment(): #in an MVC system , this would be a controller
                 #player.player_id = Environment.NEXT_PLAYER_ID
                 #Environment.NEXT_PLAYER_ID = Environment.NEXT_PLAYER_ID + 1
         
-                self.players[playerId] = player
-        
+                self.players[playerId] = player        
                 return player
 
         def createBuilding(self, team,pos):
@@ -267,7 +266,7 @@ class Environment(): #in an MVC system , this would be a controller
 
         #FUNCTIONS FOR NETWORKING
         def writeStateToServer(self):
-                string =self.cSerialize()
+                string =self.Serialize()
                 
                 serv_db = shelve.open(SERVERDATA)
                 
@@ -298,7 +297,34 @@ class Environment(): #in an MVC system , this would be a controller
                 #print len(s),s         
                 return s
 
-        
-     
+        def Serialize(self):
+                s=''
+                for p in self.players.itervalues():
+                        s+=str(p.player_id)+'&'
+                        s+=str(p.team)+'&'
+                        s+=str(p.sides)+'&'
+                        s+=str(p.resources)+'&'
+                        s+=str(p.partialResources)+'&'
+                        s+=str(p.targetPosition.x)+'^'+str(p.targetPosition.y)+'&'
+                        for a in p.animations:
+                                s+=str(a[0])+'#'+str(a[1])+'#'+str(a[2])+'^'
+                        s+='&'
+                        s+=str(p.action)+'@'
+                s+='$'
+                for b in self.buildings.itervalues():
+                        s+=str(b.building_id)+'&'
+                        s+=str(b.team)+'&'
+                        s+=str(b.sides)+'&'
+                        s+=str(b.resources)+'&'
+                        s+=str(b.partialResources)+'&'
+                        s+=str(b.position.x)+'^'+str(b.position.y)+'&'
+                        for a in b.animations:
+                                s+=str(a[0])+'#'+str(a[1])+'#'+str(a[2])+'^'
+                        s+='@'
+                s+='$'
+                s+=str(self.scores[0])+'^'+str(self.scores[1])+'$'
+                s+=str(self.TimeLeft)+'$'
+                s+=str(self.GameOver)
+                return s
         
  

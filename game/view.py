@@ -311,24 +311,12 @@ class Window(object):
         
         player_animatedActions =self.playerAnimations[str(player.player_id)]
             
-       #player_animatedActions.animation
-        
-        while (len(player.animations)>0):
-            
-            anim=player.animations.pop()
-            if (self.environment.IsServer and anim[3] ):
-                player_animatedActions.addAnimation(anim[0],anim[1],tick)                
-                player.animations.insert(0,  (anim[0],anim[1],tick,False))
-                
-            elif self.environment.IsServer and not anim[3]:
-                print 'EOL'
-                break
-            elif not self.environment.IsServer:
-                
-                player_animatedActions.addAnimation(anim[0],anim[1],tick)
-                
-                
+        for anim in player.animations:
+            player_animatedActions.addAnimation(anim[0],anim[1],tick)
+        player.animations = []    
         return     player_animatedActions
+                
+                
         
     def drawPlayer(self,player,position,isVisible,tick):
 

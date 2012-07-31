@@ -46,7 +46,7 @@ class PlayerController():
         self.view = view
         self._actionQueue = []
         self._currentAction = None
-
+        self._actionsAreBlocked =False
         self._movingUp = False
         self._movingDown = False
         self._movingLeft = False
@@ -97,43 +97,36 @@ class PlayerController():
             self.position += (dt * self.speed) * direction.norm()
         self.view.environment.Position = self.position
         
-        self.view.environment.makeRequest(0,self.position)
+        
         
         self.view.setCenter(self.position)
 
 
     def _startedAction(self, action):
+        print self._actionsAreBlocked
+        if(not self._actionsAreBlocked):
+            self._actionsAreBlocked=True
+            lastAction = self._currentAction
+            self._currentAction = action
 
-        lastAction = self._currentAction
-        self._currentAction = action
-
-        if self._currentAction == SWITCH_TEAMS:
-            pass #self.perspective.callRemote("switchTeams")
-
-        if self._currentAction == ATTACK:
-            self.view.environment.action = 1
-        elif self._currentAction == BUILD:
-            self.view.environment.action = 3
-        elif self._currentAction == SCAN:
-            self.view.environment.action = 2            
-        elif self._currentAction == UPGRADE:
-            #make upgrade key toggle the upgrade action
-            self.view.environment.action = 4
-        else:
-            self._currentAction = None
-            self.view.environment.action = 0
-        self.view.environment.makeRequest(self.view.environment.action,self.position)
+        
+            if self._currentAction == ATTACK:
+                self.view.environment.action = 1
+            elif self._currentAction == BUILD:
+                self.view.environment.action = 3
+            elif self._currentAction == SCAN:
+                self.view.environment.action = 2            
+            elif self._currentAction == UPGRADE:
+                #make upgrade key toggle the upgrade action
+                self.view.environment.action = 4
+            else:
+                self._currentAction = None
+                self.view.environment.action = 0
+        
         
 
     def _finishedAction(self):
-        '''if self._currentAction == ATTACK:
-            pass
-        elif self._currentAction == BUILD:
-            pass #self.perspective.callRemote('finishBuilding')
-        elif self._currentAction == SCAN:
-            self.view.environment.action = 0 
-        elif self._currentAction == UPGRADE:
-            pass #self.perspective.callRemote('finishUpgrading')'''
+        self._actionsAreBlocked=False
         self._currentAction = None
 
         return
@@ -143,15 +136,17 @@ class PlayerController():
 	    
             self._movingUp = True
 
-        if key == MOVE_DOWN:
+        elif key == MOVE_DOWN:
             self._movingDown = True
 
-        if key == MOVE_LEFT:
+        elif key == MOVE_LEFT:
             self._movingLeft = True
 
-        if key == MOVE_RIGHT:
+        elif key == MOVE_RIGHT:
             self._movingRight = True
-
+        else:
+            
+            self._startedAction(key)
 
     def motionKeyRelease(self, key):
         if key == MOVE_UP:
@@ -173,32 +168,22 @@ class PlayerController():
         """
         Handle currently available pygame input events.
         """
-        time = pygame.time.get_ticks()
-        self._updatePosition((time - self.previousTime) / 1000.0)
-        self.previousTime = time
-
         for event in pygame.event.get():
             if (event.type == pygame.QUIT) or ((event.type == pygame.KEYDOWN) and (event.key == QUIT)):
-                #reactor.stop()
+                
                 sys.exit()
                 
             if (event.type == pygame.KEYDOWN):
-                if (event.key in self._actions):
-                    self._actionQueue.append(event.key)
-
                 self.motionKeyPress(event.key)
-
+                
 
             elif (event.type == pygame.KEYUP):
                 self.motionKeyRelease(event.key)
-                if (event.key in self._actions):
-                    if self._currentAction == event.key:
-                        self._finishedAction()
-                    else:
-                        if not event.key in self._actionQueue:
-                            print "mystery key error: " + str(event.key)
-                        if event.key in self._actionQueue:
-                            self._actionQueue.remove(event.key)
+                
 
-        if (not self._currentAction) and self._actionQueue:
-            self._startedAction(self._actionQueue.pop())
+       
+        time = pygame.time.get_ticks()
+        print 'time',time - self.previousTime
+        self._updatePosition((time - self.previousTime) / 1000.0)
+        self.previousTime = time
+        

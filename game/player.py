@@ -93,10 +93,6 @@ class Player():
         def performBuild(self,tick):
                 self.animations.append((AnimatedActions.PLAYER_BUILD,True,tick,True))
                         
-                
-            
-             
-
 
 
 class Building():
