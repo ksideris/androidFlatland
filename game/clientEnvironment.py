@@ -49,6 +49,7 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
 		self.GameOver =False
 		self.playerID =player_id
 		
+		self.player = None
 		self.action = 0
 		self.attemptedAction = 0
 		self.lastAction = 0
@@ -94,7 +95,74 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
             
     def readGestures(self):
         self.controller._handleInput()
+        if(self.player<>None):
+            print self.player.action
+            if(self.player.action == Player.ATTACK): #ATTACK
+                                    self.handleAttack()
 
+            elif(self.player.action == Player.BUILD): #building
+                                    self.handleBuild()
+
+            elif(self.player.action == Player.UPGRADE): #building
+                                    self.handleUpgrade()
+
+            elif(self.player.action == Player.SCAN): #building
+                                    self.handleScan()
+
+            elif(self.player.action == Player.IDLE):
+                                    self.handleIdle()
+
+
+
+    def handleAttack(self):
+                if(self.player.sides>=3):
+                        self.player.performAttack(self.Tick)  
+                       
+    def handleBuild(self):
+                ACTION = "BUILD"
+                if((self.ResourcePool.getPosition()-self.player.getPosition()).length< self.ResourcePool.size):
+                        ACTION ="MINE"
+                else:
+                        for b in self.buildings.itervalues():
+                                
+                                if(b.team == self.player.team and b.isPolyFactory() and b.resources == 5 and (b.getPosition()- player.getPosition()).length <b.size):
+                                        ACTION ="MINE"
+                                        break      
+                if( ACTION =="MINE"):
+                        self.player.performBuild(self.Tick)  
+                        
+                                         
+                else:
+                        if(self.player.resources>0):
+                                BUILDING =None
+                                for b in self.buildings.itervalues():
+                                        if   (b.getPosition() - self.player.getPosition()).length < b.size:
+                                                BUILDING =b
+                                                break
+                                
+
+                                if BUILDING.team ==self.player.team:
+                                        self.player.performBuild(self.Tick) 
+        
+    def handleUpgrade(self):
+                allowedUpgradeLoc = False
+                if((self.ResourcePool.getPosition()-self.player.getPosition()).length< self.ResourcePool.size):
+                        allowedUpgradeLoc=True
+                else:
+                        for b in self.buildings.itervalues():
+                                if(b.team == self.player.team and b.isPolyFactory() and b.resources == 5 and (b.getPosition()- self.player.getPosition()).length <b.size): 
+                                        allowedUpgradeLoc=True
+                                        break
+                if(allowedUpgradeLoc):
+                       self.player.upgrade(self.Tick) 
+
+    def handleScan(self):
+             self.player.scan(self.Tick)    
+
+    def handleIdle(self):
+
+             pass  
+      
     def updateTime(self):
 		self.Tick+= 1.0/Environment.FPS
 		#if( self.TimeLeft<=0):
@@ -199,7 +267,7 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
                             self.players[pkey].resources = pResources
                             self.players[pkey].partialResources = pPartialResources
                             
-                            self.players[pkey].animations.extend(pAnimations)
+                            
                             
                             if pId == self.playerID:
                                 
@@ -207,12 +275,14 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
                                 
                                 self.players[pkey].action = self.action
                             else:
-                                
+                                self.players[pkey].animations.extend(pAnimations)
                                 self.players[pkey].targetPosition = pPosition
                                 self.players[pkey].action = pAction
                         else:
                             
                             newplayer = self.createPlayer(pId,pTeam)
+                            if(pId == self.playerID):
+                                self.player=newplayer
                             newplayer.targetPosition=pPosition
                             newplayer.sides = pSides
                             newplayer.resources = pResources

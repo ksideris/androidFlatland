@@ -103,7 +103,7 @@ class PlayerController():
 
 
     def _startedAction(self, action):
-        print self._actionsAreBlocked
+        
         if(not self._actionsAreBlocked):
             self._actionsAreBlocked=True
             lastAction = self._currentAction
@@ -152,15 +152,16 @@ class PlayerController():
         if key == MOVE_UP:
             self._movingUp = False
 
-        if key == MOVE_DOWN:
+        elif key == MOVE_DOWN:
             self._movingDown = False
 
-        if key == MOVE_LEFT:
+        elif key == MOVE_LEFT:
             self._movingLeft = False
 
-        if key == MOVE_RIGHT:
+        elif key == MOVE_RIGHT:
             self._movingRight = False
-
+        else:
+            self._finishedAction()
     def isMotionKey(self, key):
         return key == MOVE_UP or key == MOVE_DOWN or key == MOVE_LEFT or key == MOVE_RIGHT
 
