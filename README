@@ -13,6 +13,7 @@ Read more about the game here:
 http://games.ucla.edu/games/flatland/
 
 In this latest rewrite, the game logic has been completely decoupled from the networking stack.
+In this branch, the game is able to run on android platforms using the pygame subset for android http://pygame.renpy.org/
 
 Networking is achieved through http requests (subject to performance evaluation) to achieve greater portability between platforms
 It has been tested under Windows, Linux and Mac and it written entirely in python

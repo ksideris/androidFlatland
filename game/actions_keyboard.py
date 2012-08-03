@@ -162,6 +162,14 @@ class PlayerController():
             self._movingRight = False
         else:
             self._finishedAction()
+            
+    def allKeyRelease(self):
+        self._movingUp = False
+        self._movingDown = False
+        self._movingLeft = False
+        self._movingRight = False
+        self._finishedAction()
+        
     def isMotionKey(self, key):
         return key == MOVE_UP or key == MOVE_DOWN or key == MOVE_LEFT or key == MOVE_RIGHT
 
@@ -178,9 +186,10 @@ class PlayerController():
                 self.motionKeyPress(event.key)
                 
 
-            elif (event.type == pygame.KEYUP):
-                self.motionKeyRelease(event.key)
-                
+            else:
+                self.allKeyRelease()
+
+        
 
        
         time = pygame.time.get_ticks()

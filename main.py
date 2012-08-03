@@ -12,7 +12,10 @@ __copyright__   = "Copyright 2012, UCLA game lab"
 import pygame
 import game.view as view
 import game.clientEnvironment as environment
-
+try:
+    import android
+except ImportError:
+    android = None
 import sys, platform
 
 pygame.init()
@@ -32,7 +35,7 @@ else:
 
 #print 'Usage: gameclient.py player_id team'
 
-tenv = environment.Environment(1,2,'192.168.1.5','80')
+tenv = environment.Environment(5,2,'192.168.1.5','80')
 
 a=view.Window(tenv)
         
