@@ -180,9 +180,9 @@ class PlayerController():
         for event in pygame.event.get():
             if (event.type == pygame.QUIT) or ((event.type == pygame.KEYDOWN) and (event.key == QUIT)):
                 
-                sys.exit()
-                
-            if (event.type == pygame.KEYDOWN):
+                self.view.environment.Exit()
+           
+            elif (event.type == pygame.KEYDOWN):
                 self.motionKeyPress(event.key)
                 
 

@@ -26,16 +26,33 @@ if platform.machine() == "armv7l":
     pygame.mouse.set_visible(False)
     from game.actions_keyboard import PlayerController
     
-    pygame.display.set_mode((800, 480))
+    screen =pygame.display.set_mode((800, 480))
 else:
     displayFlags = pygame.DOUBLEBUF
-    pygame.display.set_mode((800, 480), displayFlags)
+    screen =pygame.display.set_mode((800, 480), displayFlags)
     from game.actions_keyboard import PlayerController
 
-
+'''
+done=False	
+while (not done):	
+    for event in pygame.event.get(): # User did something
+        if event.type == pygame.QUIT: # If user clicked close
+            done=True
+        if  event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            done=True
+    background = pygame.Surface(screen.get_size())
+    background = background.convert()
+    background.fill((250, 250, 250))
+    screen.blit(background, (0, 0))
+    font = pygame.font.Font(None, 25)
+ 
+    text = font.render("My text",True,[0,0,0])
+    screen.blit(text, [250,250])
+    pygame.display.flip()
+'''    
 #print 'Usage: gameclient.py player_id team'
 
-tenv = environment.Environment(5,2,'192.168.1.5','80')
+tenv = environment.Environment(5,2,'127.0.0.1','80')
 
 a=view.Window(tenv)
         

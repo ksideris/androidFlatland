@@ -18,7 +18,8 @@ import pygame
 from vector import Vector2D
 from game.player import Player,Building,ResourcePool
 
-from game.network.asyncClient import AsyncClient
+#from game.network.asyncClient import AsyncClient
+from game.network.UDPClient import UDPClient
 from libs.LoopingCall import LoopingThread
 
 
@@ -60,7 +61,7 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
 		self.scores =[0,0]
 		self.IsServer = False
 		self.ResourcePool = ResourcePool()
-		self.client = AsyncClient(self)
+		self.client = UDPClient(self)
 		self.serverIP =serverIP
 		self.serverPort = serverPort
                 self.Tick = 0
@@ -178,11 +179,13 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
 		self.view.paint(self.Tick )
                 for event in pygame.event.get():
                         if event.type == pygame.QUIT:
-                                self.shutdown()
-                                pygame.quit()
-                                sys.exit()
+                                self.Exit()
                         
-		
+    def Exit(self):
+        self.shutdown()
+        pygame.quit()
+
+       
     def makeRequest(self):
         #print self.action
         
@@ -202,7 +205,7 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
 
 		self.lastUpdate =time.time()
 		self.view.start('client-'+str(self.playerID))
-		self.client.start(self.serverIP,self.serverPort)
+		self.client.start(self.serverIP,int(self.serverPort),self.playerID)
 		
                 #if os.path.exists(CLIENTLOCALDATA.split('.')[0]+str(self.playerID)+'.'+CLIENTLOCALDATA.split('.')[1]):		
                 #    os.remove(CLIENTLOCALDATA.split('.')[0]+str(self.playerID)+'.'+CLIENTLOCALDATA.split('.')[1])
@@ -218,7 +221,7 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
 	#FUNCTIONS FOR NETWORKING
 	
     def deSerialize(self,state):
-        
+       
         try:
                 
             '''
@@ -229,6 +232,7 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
                         player1->id&Team&sides&resources&partialResources&pos_x^pos_y&anim1^anim2^anim3&action
             '''
             if(state<>None):
+                
                 t = state.split('$')
                 
                 if(len(t)>0):

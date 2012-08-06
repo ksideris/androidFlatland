@@ -11,10 +11,6 @@ __author__      = "Konstantinos Sideris"
 __copyright__   = "Copyright 2012, UCLA game lab"
 
 
-
-
-
-
 import pygame
 from vector import Vector2D
 from game.player import Player,Building,ResourcePool
@@ -54,7 +50,7 @@ class Environment(): #in an MVC system , this would be a controller
                 self.actions =None
                 self.IsServer = True
                 self.ResourcePool = ResourcePool()
-
+                
         #Helper Functions
         def createPlayer(self, player_id,team):
                 '''add a player to the given team'''
@@ -123,12 +119,13 @@ class Environment(): #in an MVC system , this would be a controller
                 for event in pygame.event.get():
                         if event.type == pygame.QUIT:
                                 pygame.quit()
-                                sys.exit()
+                                #sys.exit()
                         if event.type == pygame.KEYDOWN:
                                 if event.key==pygame.K_s:
                                         self.StartGame()
                 #print time.time()-startTime
-                
+                                        
+                        
         def processNewState(self):
             
                 for action in self.actions:
@@ -290,13 +287,23 @@ class Environment(): #in an MVC system , this would be a controller
                 finally:
                         client_db.close()
 
-        def cSerialize(self):
+        def TransmitStateUDP(self):
+                for c in self.clients.itervalues():
+                        sock = socket.socket( socket.AF_INET,  socket.SOCK_DGRAM ) # UDP
+                        sock.sendto( MESSAGE, (c[0], c[1]) )
+
+        def ReceiveStatesUDP(self):
+                for c in self.clients.itervalues():
+                        sock = socket.socket( socket.AF_INET,  socket.SOCK_DGRAM ) # UDP
+                        sock.sendto( MESSAGE, (c[0], c[1]) )
+                        
+        def cSerialize(self): #deprecated
                 s=pickle.dumps(self.players)+'$'+pickle.dumps(self.buildings)+'$'+\
                 pickle.dumps(self.ResourcePool)+'$'+pickle.dumps(self.scores)+'$'+str(self.TimeLeft)+'$'+str(self.Tick)+'$'+str(self.GameOver)  
                 
                 #print len(s),s         
                 return s
-
+        
         def Serialize(self):
                 s=''
                 for p in self.players.itervalues():
@@ -322,9 +329,11 @@ class Environment(): #in an MVC system , this would be a controller
                                 s+=str(a[0])+'#'+str(a[1])+'#'+str(a[2])+'^'
                         s+='@'
                 s+='$'
+                
                 s+=str(self.scores[0])+'^'+str(self.scores[1])+'$'
                 s+=str(self.TimeLeft)+'$'
                 s+=str(self.GameOver)
+
                 return s
         
  
