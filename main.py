@@ -12,11 +12,21 @@ __copyright__   = "Copyright 2012, UCLA game lab"
 import pygame
 import game.view as view
 import game.clientEnvironment as environment
+import libs.beacon as beacon
+
 try:
     import android
 except ImportError:
     android = None
 import sys, platform
+
+
+print 'Looking for server'
+while True:
+    server = beacon.find_server(12000, b"abc")
+    if server<>None:
+        break
+print 'Found server: ',server
 
 pygame.init()
 if platform.machine() == "armv7l":
@@ -52,7 +62,10 @@ while (not done):
 '''    
 #print 'Usage: gameclient.py player_id team'
 
-tenv = environment.Environment(5,2,'127.0.0.1','80')
+
+#print("single: %r" % beacon.find_server(12000, b"abc"))
+
+tenv = environment.Environment(1,1,server,'80')
 
 a=view.Window(tenv)
         
