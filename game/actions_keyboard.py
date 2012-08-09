@@ -193,7 +193,7 @@ class PlayerController():
 
        
         time = pygame.time.get_ticks()
-        print 'time',time - self.previousTime
+        #print 'time',time - self.previousTime
         self._updatePosition((time - self.previousTime) / 1000.0)
         self.previousTime = time
         

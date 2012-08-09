@@ -47,7 +47,7 @@ class UDPServer():
                     try:
                         data, addr = self.sockin.recvfrom( 1024 ) # buffer size is 1024 bytes
                         #print "received message:", data," from ",addr
-                        print (data.split('&')[0],data.split('&')[1])
+                        #print (data.split('&')[0],data.split('&')[1])
                         
         
                         serv_db = shelve.open(SERVERDATA)

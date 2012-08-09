@@ -23,7 +23,7 @@ import sys, platform
 
 print 'Looking for server'
 while True:
-    server = beacon.find_server(12000, b"abc")
+    server = beacon.find_server(12000, b"flatland_arg")
     if server<>None:
         break
 print 'Found server: ',server

@@ -97,7 +97,7 @@ class Environment(LoopingThread): #in an MVC system , this would be a controller
     def readGestures(self):
         self.controller._handleInput()
         if(self.player<>None):
-            print self.player.action
+            #print self.player.action
             if(self.player.action == Player.ATTACK): #ATTACK
                                     self.handleAttack()
 
