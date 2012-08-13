@@ -58,7 +58,7 @@ class UDPClient():
                       socket.SOCK_DGRAM ) # UDP
 	host = socket.gethostname()
         print socket.gethostbyname(host)
-	self.address = socket.gethostbyname(host)
+	self.address = '192.168.1.4'#socket.gethostbyname(host)#
 	self.sockin.bind( ( self.address,60000+pid+1) )
 
         self.sockin.setblocking(False)

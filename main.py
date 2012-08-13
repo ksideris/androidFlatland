@@ -65,7 +65,7 @@ while (not done):
 
 #print("single: %r" % beacon.find_server(12000, b"abc"))
 
-tenv = environment.Environment(1,1,server,'56000')
+tenv = environment.Environment(2,2,server,'56000')
 
 a=view.Window(tenv)
         

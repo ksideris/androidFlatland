@@ -19,9 +19,7 @@ import pygame,time
 
 try:
     import pygame.mixer as mixer
-    SOUNDS_SUPPORTED=True
 except ImportError:
-    SOUNDS_SUPPORTED=False
     import android.mixer as mixer
     
 # twisted
@@ -46,31 +44,33 @@ def loadImage(path):
 sounds = dict()
 
 def initSounds():
+    music_dir = FilePath("data").child("sfx").child("alex_sfx")
+                                    
 #    mixer.init(frequency=16000)#, size=-8, channels=1)
-    sounds["trigger trap"] = mixer.Sound("data/sfx/alex_sfx/Trigger Trap.wav")
-    sounds["explosion"] = mixer.Sound("data/sfx/alex_sfx/Attack Hit.wav")
+    sounds["trigger trap"] = mixer.Sound(music_dir.child("Trigger Trap.wav"))
+    sounds["explosion"] = mixer.Sound(music_dir.child("Attack Hit.wav"))
 
-    sounds["attack"] = mixer.Sound("data/sfx/alex_sfx/Attacked.wav")
-    sounds["poly armor full"] = mixer.Sound("data/sfx/alex_sfx/Points Full.wav")
-    sounds["player upgrade"] = mixer.Sound("data/sfx/alex_sfx/You upgraded.wav")
+    sounds["attack"] = mixer.Sound(music_dir.child("Attacked.wav"))
+    sounds["poly armor full"] = mixer.Sound(music_dir.child("Points Full.wav"))
+    sounds["player upgrade"] = mixer.Sound(music_dir.child("You upgraded.wav"))
 
-    sounds["accept upgrade"] = mixer.Sound("data/sfx/alex_sfx/accept_upgrade.wav")
+    sounds["accept upgrade"] = mixer.Sound(music_dir.child("accept_upgrade.wav"))
 
-    sounds["gain poly armor"] = mixer.Sound("data/sfx/alex_sfx/gain resource.wav")
-    sounds["lose poly armor"] = mixer.Sound("data/sfx/alex_sfx/pay resource.wav")
-    sounds["poly armor depleted"] = mixer.Sound("data/sfx/alex_sfx/resources depleted.wav")
+    sounds["gain poly armor"] = mixer.Sound(music_dir.child("gain resource.wav"))
+    sounds["lose poly armor"] = mixer.Sound(music_dir.child("pay resource.wav"))
+    sounds["poly armor depleted"] = mixer.Sound(music_dir.child("resources depleted.wav"))
 
-    sounds["mining"] = mixer.Sound("data/sfx/alex_sfx/In Resource Pool(loop).wav")
+    sounds["mining"] = mixer.Sound(music_dir.child("In Resource Pool(loop).wav"))
 
-    sounds["building",3] = mixer.Sound("data/sfx/alex_sfx/Building 3-sided.wav")
-    sounds["building",4] = mixer.Sound("data/sfx/alex_sfx/Building 4-sided.wav")
-    sounds["building",5] = mixer.Sound("data/sfx/alex_sfx/Building 5-sided.wav")
+    sounds["building",3] = mixer.Sound(music_dir.child("Building 3-sided.wav"))
+    sounds["building",4] = mixer.Sound(music_dir.child("Building 4-sided.wav"))
+    sounds["building",5] = mixer.Sound(music_dir.child("Building 5-sided.wav"))
 
-    sounds["finish building",3] = mixer.Sound("data/sfx/alex_sfx/Finish 3-sided.wav")
-    sounds["finish building",4] = mixer.Sound("data/sfx/alex_sfx/Finish 4-sided.wav")
-    sounds["finish building",5] = mixer.Sound("data/sfx/alex_sfx/Finish 5-sided.wav")
+    sounds["finish building",3] = mixer.Sound(music_dir.child("Finish 3-sided.wav"))
+    sounds["finish building",4] = mixer.Sound(music_dir.child("Finish 4-sided.wav"))
+    sounds["finish building",5] = mixer.Sound(music_dir.child("Finish 5-sided.wav"))
 
-    sounds["scanning"] = mixer.Sound("data/sfx/alex_sfx/Sweeping.wav")
+    sounds["scanning"] = mixer.Sound(music_dir.child("Sweeping.wav"))
 
 def getSound(strIdx, nIndex = None):
     if not nIndex == None:
@@ -223,8 +223,8 @@ class AnimatedActions():
 class Window(object):
     def __init__(self, environment):
         self.environment = environment
-        if( SOUNDS_SUPPORTED):
-            initSounds()
+        
+        initSounds()
         self.environment.view = self
         self.images = Images(FilePath("data").child("img2"))
         self.images.load()
