@@ -35,6 +35,7 @@ class UDPServer():
                                       socket.SOCK_DGRAM ) # UDP
 
                 host = socket.gethostname()
+                print socket.gethostbyname(host)
                 self.sockin.bind( ( socket.gethostbyname(host),UDP_PORT) )
                 self.sockin.setblocking(False)
                 self.sockout = socket.socket( socket.AF_INET, # Internet
