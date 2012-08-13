@@ -16,6 +16,8 @@ import libs.beacon as beacon
 
 try:
     import android
+    import android.assets as assets
+    print assets.list()
 except ImportError:
     android = None
 import sys, platform

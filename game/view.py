@@ -19,8 +19,10 @@ import pygame,time
 
 try:
     import pygame.mixer as mixer
+    ANDROID_SOUNDS_MODE =False
 except ImportError:
     import android.mixer as mixer
+    ANDROID_SOUNDS_MODE =True
     
 # twisted
 
@@ -42,35 +44,39 @@ def loadImage(path):
     return pygame.image.load(path.path)
 
 sounds = dict()
+music_dir = FilePath("data").child("sfx").child("alex_sfx")
 
 def initSounds():
-    music_dir = FilePath("data").child("sfx").child("alex_sfx")
-                                    
-#    mixer.init(frequency=16000)#, size=-8, channels=1)
-    sounds["trigger trap"] = mixer.Sound(music_dir.child("Trigger Trap.wav").path)
-    sounds["explosion"] = mixer.Sound(music_dir.child("Attack Hit.wav").path)
+    
+    if(not ANDROID_SOUNDS_MODE):
+  
+    
+        #    mixer.init(frequency=16000)#, size=-8, channels=1)
+        sounds["Trigger Trap"] = mixer.Sound(music_dir.child("Trigger Trap.wav").path)
+        sounds["Attack Hit"] = mixer.Sound(music_dir.child("Attack Hit.wav").path)
 
-    sounds["attack"] = mixer.Sound(music_dir.child("Attacked.wav").path)
-    sounds["poly armor full"] = mixer.Sound(music_dir.child("Points Full.wav").path)
-    sounds["player upgrade"] = mixer.Sound(music_dir.child("You upgraded.wav").path)
+        sounds["Attacked"] = mixer.Sound(music_dir.child("Attacked.wav").path)
+        sounds["Points Full"] = mixer.Sound(music_dir.child("Points Full.wav").path)
+        sounds["You upgraded"] = mixer.Sound(music_dir.child("You upgraded.wav").path)
 
-    sounds["accept upgrade"] = mixer.Sound(music_dir.child("accept_upgrade.wav").path)
+        sounds["accept_upgrade"] = mixer.Sound(music_dir.child("accept_upgrade.wav").path)
 
-    sounds["gain poly armor"] = mixer.Sound(music_dir.child("gain resource.wav").path)
-    sounds["lose poly armor"] = mixer.Sound(music_dir.child("pay resource.wav").path)
-    sounds["poly armor depleted"] = mixer.Sound(music_dir.child("resources depleted.wav").path)
+        sounds["gain resource"] = mixer.Sound(music_dir.child("gain resource.wav").path)
+        sounds["pay resource"] = mixer.Sound(music_dir.child("pay resource.wav").path)
+        sounds["poly armor depleted"] = mixer.Sound(music_dir.child("resources depleted.wav").path)
 
-    sounds["mining"] = mixer.Sound(music_dir.child("In Resource Pool(loop).wav").path)
+        sounds["In Resource Pool(loop)"] = mixer.Sound(music_dir.child("In Resource Pool(loop).wav").path)
 
-    sounds["building",3] = mixer.Sound(music_dir.child("Building 3-sided.wav").path)
-    sounds["building",4] = mixer.Sound(music_dir.child("Building 4-sided.wav").path)
-    sounds["building",5] = mixer.Sound(music_dir.child("Building 5-sided.wav").path)
+        sounds["Building 3-sided"] = mixer.Sound(music_dir.child("Building 3-sided.wav").path)
+        sounds["Building 4-sided"] = mixer.Sound(music_dir.child("Building 4-sided.wav").path)
+        sounds["Building 5-sided"] = mixer.Sound(music_dir.child("Building 5-sided.wav").path)
 
-    sounds["finish building",3] = mixer.Sound(music_dir.child("Finish 3-sided.wav").path)
-    sounds["finish building",4] = mixer.Sound(music_dir.child("Finish 4-sided.wav").path)
-    sounds["finish building",5] = mixer.Sound(music_dir.child("Finish 5-sided.wav").path)
+        sounds["Finish 3-sided"] = mixer.Sound(music_dir.child("Finish 3-sided.wav").path)
+        sounds["Finish 4-sided"] = mixer.Sound(music_dir.child("Finish 4-sided.wav").path)
+        sounds["Finish 5-sided"] = mixer.Sound(music_dir.child("Finish 5-sided.wav").path)
 
-    sounds["scanning"] = mixer.Sound(music_dir.child("Sweeping.wav").path)
+        sounds["Sweeping"] = mixer.Sound(music_dir.child("Sweeping.wav").path)
+    
 
 def getSound(strIdx, nIndex = None):
     if not nIndex == None:
@@ -78,7 +84,13 @@ def getSound(strIdx, nIndex = None):
     else:
         return sounds[strIdx]
 
-
+def playSound(sound):
+    if(not ANDROID_SOUNDS_MODE):
+        mixer.Channel(1).play(getSound(sound))
+    else:
+        mixer.music.load(music_dir.child(sound+'.wav').path)
+        mixer.music.play()
+        
 
 class AnimatedActions():
 
@@ -113,72 +125,34 @@ class AnimatedActions():
                 self.player.scanRadius = 0
                 
         if(animtype == AnimatedActions.PLAYER_ATTACK): 
-            mixer.Channel(1).play(getSound("attack"))
+            playSound("Attacked")
             self.animation.append("Attack")
         elif(animtype == AnimatedActions.PLAYER_SCAN): 
-            mixer.Channel(1).play(getSound("scanning"))
+            playSound("Sweeping")
             self.animation.append("Scan")
         elif(animtype == AnimatedActions.PLAYER_BUILD): 
-            if not mixer.Channel(2).get_busy():
-                mixer.Channel(2).play(getSound("mining"))
-               
+            playSound("In Resource Pool(loop)")
             self.animation.append("mining")
         elif(animtype == AnimatedActions.PLAYER_UPGRADE):
-            mixer.Channel(7).play(getSound("player upgrade")) 
+            playSound("You upgraded") 
             self.animation.append("LevelUp")
         elif(animtype == AnimatedActions.PLAYER_DOWNGRADE):
-            mixer.Channel(4).play(getSound("lose poly armor")) 
+            playSound("pay resource")
             self.animation.append("LevelUp")
         elif(animtype == AnimatedActions.PLAYER_LOSE_RESOURCE): 
-            mixer.Channel(4).play(getSound("lose poly armor")) 
+            playSound("pay resource")
         elif(animtype == AnimatedActions.PLAYER_GAIN_RESOURCE): 
-            mixer.Channel(4).play(getSound("gain poly armor")) 
+            playSound("gain resource")
         elif(animtype == AnimatedActions.BUILDING_ATTACKED): 
             self.animation.append("BuildingAttacked")
         elif(animtype == AnimatedActions.BUILDING_EXPLODED):
-            mixer.Channel(5).play(getSound("trigger trap"))
-            mixer.Channel(6).play(getSound("explosion")) 
+            playSound("Trigger Trap")
             self.animation.append("TrapExplosion")
         elif(animtype == AnimatedActions.BUILDING_UPGRADED): 
-            mixer.Channel(7).play(getSound("finish building", 3), 0)
-            mixer.Channel(2).stop()
+            playSound("Finish 3-sided")
             self.animation.append("building upgraded")
 
-    def PlaySound(self,animtype):
-        
-        if(animtype == AnimatedActions.PLAYER_ATTACK): 
-                mixer.Channel(1).play(getSound("attack"))
-        elif(animtype == AnimatedActions.PLAYER_SCAN): 
-                mixer.Channel(3).play(getSound("scanning"),-1)
-                mixer.Channel(3).fadeout(4000)
-        elif(animtype == AnimatedActions.PLAYER_BUILD): 
-                mixer.Channel(2).play(getSound("mining"))
-        elif(animtype == AnimatedActions.PLAYER_UPGRADE):
-            if not mixer.Channel(7).get_busy():
-                mixer.Channel(7).play(getSound("player upgrade")) 
-                mixer.Channel(2).stop()
-        elif(animtype == AnimatedActions.PLAYER_DOWNGRADE):
-            if not mixer.Channel(4).get_busy():
-                mixer.Channel(4).play(getSound("lose poly armor")) 
-        elif(animtype == AnimatedActions.PLAYER_LOSE_RESOURCE): 
-            if not mixer.Channel(4).get_busy():
-                mixer.Channel(4).play(getSound("lose poly armor")) 
-        elif(animtype == AnimatedActions.PLAYER_GAIN_RESOURCE): 
-            if not mixer.Channel(4).get_busy():
-                mixer.Channel(4).play(getSound("gain poly armor")) 
-        
-        elif(animtype == AnimatedActions.BUILDING_EXPLODED):
-            if not mixer.Channel(5).get_busy():
-                mixer.Channel(5).play(getSound("trigger trap"))
-            if not mixer.Channel(6).get_busy():
-                mixer.Channel(6).play(getSound("explosion")) 
-        elif(animtype == AnimatedActions.BUILDING_UPGRADED): 
-            if not mixer.Channel(7).get_busy():
-                mixer.Channel(7).play(getSound("finish building", 3), 0)
-            if not mixer.Channel(2).get_busy():
-                mixer.Channel(2).stop()
-
-                
+  
     def drawAnimation(self,view, position ,tick,visible):
         if(len(self.animation)==0):
                 return
