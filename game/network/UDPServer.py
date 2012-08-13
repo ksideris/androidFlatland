@@ -30,11 +30,12 @@ class UDPServer():
                 
                 
 
-
-
+                
                 self.sockin = socket.socket( socket.AF_INET, # Internet
                                       socket.SOCK_DGRAM ) # UDP
-                self.sockin.bind( (UDP_IP,UDP_PORT) )
+
+                host = socket.gethostname()
+                self.sockin.bind( ( socket.gethostbyname(host),UDP_PORT) )
                 self.sockin.setblocking(False)
                 self.sockout = socket.socket( socket.AF_INET, # Internet
                                       socket.SOCK_DGRAM ) # UDP
