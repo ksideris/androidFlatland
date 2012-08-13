@@ -22,12 +22,11 @@ try:
     SOUNDS_SUPPORTED=True
 except ImportError:
     SOUNDS_SUPPORTED=False
-    ##import android.android_mixer as mixer
+    import android.mixer as mixer
     
 # twisted
 
 from libs.filepath import FilePath
-#from twisted.internet.task import LoopingCall
 
 # local
 from vector import Vector2D

@@ -6,8 +6,12 @@ __author__      = "Konstantinos Sideris"
 __copyright__   = "Copyright 2012, UCLA game lab"
 
 from game.network.UDPServer import UDPServer
-
-print 'Server launched at: ','127.0.0.1:80'
-UDPServer().start('127.0.0.1',80)
+import libs.beacon as beacon
+while True:
+    server = beacon.find_server(12000, b"flatland_arg")
+    if server<>None:
+        break
+print 'Server launched at: ',server,':56000'
+UDPServer().start(server,56000)
 
 
