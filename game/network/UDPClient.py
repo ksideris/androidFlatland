@@ -26,7 +26,7 @@ class UDPClient():
         #global ID
         #ID  = pid
         start =time.time()
-        message = str("192.168.1.6")+'&'+str(60000+pid+1)+'&'+str(pid)+'&'+str(team)+'&'+str(action)
+        message = str(self.address)+'&'+str(self.serv_port+pid+1)+'&'+str(pid)+'&'+str(team)+'&'+str(action)
         #print message,action
         if position<>None: 
                 message+='&'+str(position[0])+','+str(position[1])
@@ -53,11 +53,12 @@ class UDPClient():
         
         self.server_address = serv_addr
         self.server_port =   serv_port
+        
 	self.sockin = socket.socket( socket.AF_INET, # Internet
                       socket.SOCK_DGRAM ) # UDP
 	ps= socket.gethostname()
-	
-	self.sockin.bind( (socket.gethostbyname(ps),60000+pid+1) )
+	self.address = socket.gethostbyname(ps)
+	self.sockin.bind( ( self.address,serv_port+pid+1) )
         #except:
         #    print 'socket bind error'
         self.sockin.setblocking(False)
